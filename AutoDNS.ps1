@@ -5,13 +5,13 @@
 # Get-AutoDNSZone($user,$pass,$zone)
 # 
 # examples:
-# Add-AutoDNSRecord -user 123456 -pass secure123 -zone example.com -name test.example.com -type A -ttl 3600 -value 1.2.3.4
+# Add-AutoDNSRecord -user 123456 -pass secure123 -zone example.com -name test.example.com -type MX -pref 10 -ttl 3600 -value mail.test.com.
 # Remove-AutoDNSRecord -user 123456 -pass secure123 -zone example.com -name test.example.com -type A -ttl 3600 -value 1.2.3.4
 # Get-AutoDNSZone -user 123456 -pass secure123 -zone example.com
 #
 
 
-function Add-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$ttl=300,$value) {
+function Add-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$ttl=300,$pref,$value) {
     $ns="a.ns14.net"
     $style="rr_add"
     $xmlpost ='<?xml version="1.0" encoding="utf-8"?>
@@ -27,6 +27,7 @@ function Add-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$ttl=300,$value) 
     <'+$style+'>
     <name>'+$name+'</name>
     <type>'+$type+'</type>
+    <pref>'+$pref+'</pref>
     <ttl>'+$ttl+'</ttl>
     <value>'+$value+'</value>
     </'+$style+'>
@@ -62,7 +63,7 @@ function Get-AutoDNSZone($user,$pass,$zone) {
     return $result.response.result.data.zone.rr
 }
 
-function Remove-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$ttl=300,$value) {
+function Remove-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$pref,$ttl=300,$value) {
     $ns="a.ns14.net"
     $style="rr_rem"
     $xmlpost ='<?xml version="1.0" encoding="utf-8"?>
@@ -78,6 +79,7 @@ function Remove-AutoDNSRecord($user,$pass,$zone,$name,$type='TXT',$ttl=300,$valu
     <'+$style+'>
     <name>'+$name+'</name>
     <type>'+$type+'</type>
+    <pref>'+$pref+'</pref>
     <ttl>'+$ttl+'</ttl>
     <value>'+$value+'</value>
     </'+$style+'>
